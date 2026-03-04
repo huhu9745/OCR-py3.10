@@ -21,9 +21,9 @@ import traceback
 from ocr_detect import OCRRec
 
 
-# =====================================
-# OCR 服务类
-# =====================================
+
+# ---------------OCR 服务----------------
+
 class OCRService:
     """
     负责：
@@ -44,18 +44,18 @@ class OCRService:
         """
         self.model = OCRRec(device=device)
 
-    # ---------------------------------
-    # 读取上传图片 -> OpenCV格式
-    # ---------------------------------
+
+    # -------------上传图片转OpenCV格式-----------------------
+
     def read_image(self, file: UploadFile):
         data = file.file.read()
         img_array = np.frombuffer(data, np.uint8)
         img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
         return img
 
-    # ---------------------------------
-    # 从OCR文本中提取编号数字
-    # ---------------------------------
+
+    #---------- 从OCR文本中提取编号数字--------------
+
     def extract_number(self, texts):
         """
         从识别文本中提取第一个数字串
@@ -68,9 +68,9 @@ class OCRService:
                 return match.group()
         return None
 
-    # ---------------------------------
-    # 核心处理逻辑
-    # ---------------------------------
+
+    # ------------OCR读图识别-------------------------
+
     def process(self, files):
         results = []
 
@@ -121,9 +121,9 @@ class OCRService:
             "all_results": results
         }
 
-# =====================================
-# 创建 FastAPI 应用
-# =====================================
+
+#-------------------- FastAPI 接口------------------
+
 app = FastAPI()
 
 # 创建 OCR 服务实例
@@ -132,7 +132,7 @@ ocr_service = OCRService(device="gpu:0")
 
 
 # ---------------------------------
-# 首页接口（测试用）
+# 首页接口--测试用
 # ---------------------------------
 @app.get("/")
 def root():
@@ -175,9 +175,9 @@ async def ocr_api(
         )
 
 
-# =====================================
-# 启动服务
-# =====================================
+
+# -------------启动服务-----------------
+
 if __name__ == "__main__":
     uvicorn.run(
         app,
