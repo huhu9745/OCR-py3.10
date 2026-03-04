@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OCR 四图识别</title>
+</head>
+<body>
+<h2>上传4张图片</h2>
+
+<form id="uploadForm">
+    <input type="file" name="file1" required><br><br>
+    <input type="file" name="file2" required><br><br>
+    <input type="file" name="file3" required><br><br>
+    <input type="file" name="file4" required><br><br>
+
+    <button type="submit">提交识别</button>
+</form>
+
+<h3 id="result"></h3>
+
+<script>
+document.getElementById("uploadForm").onsubmit = async function(e) {
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+    let response = await fetch("http://127.0.0.1:8000/ocr", {
+        method: "POST",
+        body: formData
+    });
+
+    let data = await response.json();
+
+    if (data.success) {
+        document.getElementById("result").innerText =
+            "最终识别结果: " + data.value;
+    } else {
+        document.getElementById("result").innerText =
+            "错误: " + data.error + " 详情: " + data.all_results;
+    }
+};
+</script>
+
+</body>
+</html>
